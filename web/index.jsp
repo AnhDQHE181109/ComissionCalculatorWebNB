@@ -86,12 +86,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                 } %>
             </select></p>
 
-            <p><input type="submit" value="Calculate commission"> 
+            <p><input type="submit" name="calculateButton" id="calculateButton" value="Calculate commission"> 
 
             <br>
 
-            <p style="font-weight:bold;color:rgb(38, 91, 46)"><%=result %></p>
-            <p style="font-style:italic;color:red"><%=errorMessage %></p>
+            <p style="font-weight:bold;color:rgb(38, 91, 46)" id="result"><%=result %></p>
+            <p style="font-style:italic;color:red" id="errorMessage"><%=errorMessage %></p>
         </form>
     </body>
 </html>

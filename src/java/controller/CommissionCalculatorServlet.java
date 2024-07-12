@@ -65,7 +65,7 @@ public class CommissionCalculatorServlet extends HttpServlet {
         request.setAttribute("salesPersonTypes", salesPersonTypes);
         request.setAttribute("productTypes", productTypes);
         request.setAttribute("customerTypes", customerTypes);
-        
+
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
@@ -117,7 +117,7 @@ public class CommissionCalculatorServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        
+
         String salesPersonTypeIn = request.getParameter("salesPersonType").trim();
         String productTypeIn = request.getParameter("productType").trim();
         String productPriceIn = request.getParameter("productPrice");
@@ -125,7 +125,7 @@ public class CommissionCalculatorServlet extends HttpServlet {
             productPriceIn = productPriceIn.trim();
         }
         String customerTypeIn = request.getParameter("customerType").trim();
-        
+
         request.setAttribute("salesPersonTypes", salesPersonTypes);
         request.setAttribute("productTypes", productTypes);
         request.setAttribute("customerTypes", customerTypes);
@@ -133,8 +133,24 @@ public class CommissionCalculatorServlet extends HttpServlet {
         request.setAttribute("chosenProductType", productTypeIn);
         request.setAttribute("chosenCustomerType", customerTypeIn);
 
+        float productPrice = 0;
         if (productPriceIn.isEmpty()) {
             request.setAttribute("errorMessage", "The product's price cannot be empty!");
+
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+            return;
+        } else {
+            try {
+                productPrice = Float.parseFloat(productPriceIn);
+            } catch (NumberFormatException e) {
+                request.setAttribute("errorMessage", "The product's price is invalid");
+
+                request.getRequestDispatcher("index.jsp").forward(request, response);
+                return;
+            }
+        }
+        if (productPrice < 1 || productPrice > 20000) {
+            request.setAttribute("errorMessage", "The product's price cannot be less than $1 or greater than $20.000!");
 
             request.getRequestDispatcher("index.jsp").forward(request, response);
             return;
@@ -147,7 +163,7 @@ public class CommissionCalculatorServlet extends HttpServlet {
         } else {
             salesPersonType = false;
         }
-        
+
         if (productTypeIn.equalsIgnoreCase("Neither standard nor bonus")) {
             productTypeIn = "neither";
         }
@@ -159,12 +175,10 @@ public class CommissionCalculatorServlet extends HttpServlet {
             customerType = false;
         }
 
-        float productPrice = Float.parseFloat(productPriceIn);
-
         String result = CalculateCommission(salesPersonType, productTypeIn, productPrice, customerType);
 
         request.setAttribute("result", result);
-        
+
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
